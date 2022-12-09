@@ -37,6 +37,8 @@ Feedback_t begin_parse_packet(ToParsePacket_t * p_parse_packet,
     p_parse_packet->p_data_buf = p_data_buf;
     p_parse_packet->data_buf_capacity = data_buf_capacity;
     p_parse_packet->is_init = true;
+
+    return FEEDBACK_OK;
 }
 
 /**
@@ -54,7 +56,7 @@ Feedback_t parse_packet(ToParsePacket_t * p_parse_packet, uint8_t recv_data){
     }
 
     ret = FEEDBACK_PROCEEDING;
-    uint16_t byte_stuffing_cnt = 0;
+//    uint16_t byte_stuffing_cnt = 0;
 
     switch (p_parse_packet->parse_state) {
         case PACKET_PARSING_STATE_IDLE:
@@ -126,6 +128,7 @@ Feedback_t parse_packet(ToParsePacket_t * p_parse_packet, uint8_t recv_data){
             p_parse_packet->inst_idx = recv_data;
             update_crc(&p_parse_packet->calculated_crc, recv_data);
             p_parse_packet->recv_data_len = 0;
+            p_parse_packet->byte_stuffing_cnt = 0;
             if(p_parse_packet->packet_len > p_parse_packet->data_buf_capacity + 3){
                 // 3 = Instruction(1)+CRC(2)
                 ret = FEEDBACK_ERROR_BUFFER_OVERFLOW;
@@ -153,7 +156,7 @@ Feedback_t parse_packet(ToParsePacket_t * p_parse_packet, uint8_t recv_data){
                    && p_parse_packet->p_data_buf[p_parse_packet->recv_data_len-2] == PACKET_HEADER_2
                    && p_parse_packet->p_data_buf[p_parse_packet->recv_data_len-1] == PACKET_BYTE_STUFFING){
                     p_parse_packet->recv_data_len--;
-                    byte_stuffing_cnt++;
+                    p_parse_packet->byte_stuffing_cnt++;
                 }
             }else if(p_parse_packet->recv_data_len == 3){
                 if(p_parse_packet->inst_idx == PACKET_HEADER_0
@@ -161,10 +164,10 @@ Feedback_t parse_packet(ToParsePacket_t * p_parse_packet, uint8_t recv_data){
                    && p_parse_packet->p_data_buf[1] == PACKET_HEADER_2
                    && p_parse_packet->p_data_buf[2] == PACKET_BYTE_STUFFING){
                     p_parse_packet->recv_data_len--;
-                    byte_stuffing_cnt++;
+                    p_parse_packet->byte_stuffing_cnt++;
                 }
             }
-            if(p_parse_packet->recv_data_len+byte_stuffing_cnt+3 == p_parse_packet->packet_len){ // 3 = Instruction(1)+CRC(2)
+            if(p_parse_packet->recv_data_len+p_parse_packet->byte_stuffing_cnt+3 == p_parse_packet->packet_len){ // 3 = Instruction(1)+CRC(2)
                 p_parse_packet->parse_state = PACKET_PARSING_STATE_CRC_L;
             }
             break;

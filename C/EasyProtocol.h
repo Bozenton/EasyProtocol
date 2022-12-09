@@ -63,6 +63,7 @@ typedef struct ToParsePacket{
     uint8_t * p_data_buf;
     uint16_t data_buf_capacity;
     uint16_t recv_data_len;
+    uint16_t byte_stuffing_cnt;
     uint16_t packet_len;
     uint16_t calculated_crc;
     uint16_t recv_crc;
