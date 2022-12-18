@@ -197,7 +197,7 @@ classdef EasyProtocol < handle
             idx = bitand(temp2, 0xFF);
             
             temp1 = bitsll(crc_current, 8);
-            temp2 = obj.crc_table(uint16(idx)+1);
+            temp2 = obj.crc_table(idx+1);
 
             crc = bitxor(temp1, temp2);
         end
@@ -333,10 +333,10 @@ classdef EasyProtocol < handle
                     obj.rx_recv_crc = bitor(obj.rx_recv_crc, bitsll(uint16(recv_data), 8));
                     if obj.rx_calculated_crc == obj.rx_recv_crc
                         ret = EP_Feedback.FEEDBACK_OK;
+                        obj.rx_is_init = false;
                     else
                         ret = EP_Feedback.FEEDBACK_ERROR_CRC;
                     end
-                    obj.rx_is_init = false;
                     obj.rx_parse_state = EP_PacketState.PACKET_PARSING_STATE_IDLE;
                 otherwise
                     obj.rx_parse_state = EP_PacketState.PACKET_PARSING_STATE_IDLE;
