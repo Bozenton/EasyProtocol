@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.22)
-project(C C)
+# cmake_minimum_required(VERSION 3.22)
+# project(C C)
 
-set(CMAKE_C_STANDARD 11)
+# set(CMAKE_C_STANDARD 11)
 
-include_directories(.)
+# include_directories(.)
 
-add_executable(C
-        EasyProtocol.c
-        EasyProtocol.h
-        test.c)
+# add_executable(C
+#         EasyProtocol.c
+#         EasyProtocol.h
+#         test.c)
