@@ -1,3 +1,9 @@
+"""
+EasyProtocol
+
+Todo: Replace uint8 with bytes
+"""
+
 from enum import Enum
 from numpy import uint8, uint16
 
@@ -89,6 +95,7 @@ class Feedback(Enum):
     FEEDBACK_ERROR_WRONG_PACKET = 8
     FEEDBACK_ERROR_CRC = 9
     FEEDBACK_ERROR_NOT_ENOUGH_BUFFER_SIZE = 10
+    FEEDBACK_ERROR_TIMEOUT = 11
 
 
 def get_low_byte(w: uint16):
@@ -146,7 +153,7 @@ class EasyProtocol:
 
         return Feedback.FEEDBACK_OK
 
-    def add_data_to_packet(self, data: list[uint8]) -> Feedback:
+    def add_data_to_packet(self, data) -> Feedback:
         """
         Add data to the packet. This function can be called several times.
         :param data: list of bytes to be added
