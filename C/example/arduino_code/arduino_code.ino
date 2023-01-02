@@ -79,7 +79,7 @@ const Feedback_t rxPacket(ToParsePacket_t * p_rx_packet,
   uint32_t pre_time_ms;
   
   // Receive status packet
-  fb = begin_parse_packet(p_rx_packet, rx_buf, RX_BUF_SIZE);  // initialize
+  fb = begin_parse_packet(p_rx_packet, p_rx_buf, rx_buf_capacity);  // initialize
   if(fb == FEEDBACK_OK){
     pre_time_ms = millis();   // record the time for calculating timeout
     while(1){

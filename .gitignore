@@ -215,3 +215,9 @@ cython_debug/
 
 .vscode
 cmake-build-debug/
+
+*.axf
+*.htm
+*.lnp
+*.sct
+*.dep
